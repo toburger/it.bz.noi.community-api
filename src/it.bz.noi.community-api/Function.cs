@@ -64,7 +64,7 @@ namespace it.bz.noi.community_api
         {
             context.Logger.LogLine($"Get Request: {request.Path}?{request.QueryStringParameters} ({request.HttpMethod})\n");
 
-            var httpRequest = Helpers.TransformFromAPIGatewayProxyRequest(settings.BaseUri, request);
+            var httpRequest = Helpers.TransformFromAPIGatewayProxyRequest(settings.ServiceUri, request);
             string accessToken = await GetAccessToken();
             var httpResponse = await MakeProxyCall(httpRequest, accessToken);
             var response = await Helpers.TransformToAPIGatewayResponse(httpResponse);

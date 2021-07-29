@@ -8,7 +8,7 @@ namespace it.bz.noi.community_api
 {
     public class Settings
     {
-        private readonly Uri baseUri;
+        private readonly Uri serviceUri;
         private readonly string clientId;
         private readonly string tenantId;
         private readonly string clientSecret;
@@ -16,14 +16,19 @@ namespace it.bz.noi.community_api
 
         private Settings()
         {
-            baseUri = new Uri(Environment.GetEnvironmentVariable("SERVICE_URL")!);
-            clientId = Environment.GetEnvironmentVariable("CLIENT_ID")!;
-            tenantId = Environment.GetEnvironmentVariable("TENANT_ID")!;
-            clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET")!;
-            scopes = new[] { Environment.GetEnvironmentVariable("SERVICE_SCOPE")! };
+            serviceUri = new Uri(GetEnv("SERVICE_URL"));
+            clientId = GetEnv("CLIENT_ID")!;
+            tenantId = GetEnv("TENANT_ID")!;
+            clientSecret = GetEnv("CLIENT_SECRET")!;
+            scopes = new[] { GetEnv("SERVICE_SCOPE")! };
         }
 
-        public Uri BaseUri => baseUri;
+        private static string GetEnv(string key)
+        {
+            return Environment.GetEnvironmentVariable(key) ?? throw new Exception($"Environment variable {key} not set.");
+        }
+
+        public Uri ServiceUri => serviceUri;
 
         public string ClientId => clientId;
 

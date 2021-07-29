@@ -11,16 +11,16 @@ namespace it.bz.noi.community_api
 {
     public class Helpers
     {
-        public static Uri ConstructRequestUri(Uri baseUri, APIGatewayProxyRequest request)
+        public static Uri ConstructRequestUri(Uri serviceUri, APIGatewayProxyRequest request)
         {
             string relativeUri = request.Path == null ? "/" : $"{request.Path}";
-            return new Uri(baseUri + relativeUri);
+            return new Uri(serviceUri + relativeUri);
         }
 
-        public static HttpRequestMessage TransformFromAPIGatewayProxyRequest(Uri baseUri, APIGatewayProxyRequest request)
+        public static HttpRequestMessage TransformFromAPIGatewayProxyRequest(Uri serviceUri, APIGatewayProxyRequest request)
         {
             var method = request.HttpMethod == null ? HttpMethod.Get : new HttpMethod(request.HttpMethod);
-            var uri = ConstructRequestUri(baseUri, request);
+            var uri = ConstructRequestUri(serviceUri, request);
             var content = request.Body != null ? new StringContent(request.Body) : null;
             var httpRequest = new HttpRequestMessage(method, uri) { Content = content };
             if (request.Headers != null)
