@@ -62,13 +62,16 @@ namespace it.bz.noi.community_api
         /// <returns>The API Gateway response.</returns>
         public async Task<APIGatewayProxyResponse> Get(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            context.Logger.LogLine($"Get Request: {request.Path}?{request.QueryStringParameters} ({request.HttpMethod})\n");
+            string queryString = request.QueryStringParameters.Count > 0 ? $"?{string.Join("&", request.QueryStringParameters.Select(x => $"{x.Key}={x.Value}"))}" : "";
+            context.Logger.LogLine($"Get Request: {request.Path}{queryString} ({request.HttpMethod})\n");
 
             var httpRequest = Helpers.TransformFromAPIGatewayProxyRequest(settings.ServiceUri, request);
+            context.Logger.LogLine($"Sending HttpRequestMessage: {httpRequest}");
             string accessToken = await GetAccessToken();
+            context.Logger.LogLine($"Got Access Token: {accessToken.Substring(0, 20)}...");
             var httpResponse = await MakeProxyCall(httpRequest, accessToken);
-            var response = await Helpers.TransformToAPIGatewayResponse(httpResponse);
-            return response;
+            context.Logger.LogLine($"Received HttpResponseMessage: {httpResponse}");
+            return await Helpers.TransformToAPIGatewayResponse(httpResponse);
         }
     }
 }
