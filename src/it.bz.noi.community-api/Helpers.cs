@@ -14,7 +14,8 @@ namespace it.bz.noi.community_api
         public static Uri ConstructRequestUri(Uri serviceUri, APIGatewayProxyRequest request)
         {
             string relativeUri = request.Path == null ? "/" : $"{request.Path}";
-            return new Uri(serviceUri + relativeUri);
+            string queryString = request.QueryStringParameters.Count > 0 ? $"?{string.Join("&", request.QueryStringParameters.Select(x => $"{x.Key}={x.Value}"))}" : "";
+            return new Uri($"{serviceUri}{relativeUri}{queryString}");
         }
 
         public static HttpRequestMessage TransformFromAPIGatewayProxyRequest(Uri serviceUri, APIGatewayProxyRequest request)
