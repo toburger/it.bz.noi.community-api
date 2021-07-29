@@ -19,7 +19,16 @@ namespace it.bz.noi.community_api.Tests
         }
 
         [Fact]
-        public void TetGetMethod()
+        public void TestRequestUriConstruction()
+        {
+            Uri baseUri = new("https://dummy/api");
+            var request = new APIGatewayProxyRequest() { Path = "/hello" };
+            var uri = Helpers.ConstructRequestUri(baseUri, request);
+            Assert.Equal(new Uri("https://dummy/api/hello"), uri);
+        }
+
+        [Fact(Skip = "Integration Test")]
+        public async Task TetGetMethod()
         {
             TestLambdaContext context;
             APIGatewayProxyRequest request;
@@ -27,12 +36,11 @@ namespace it.bz.noi.community_api.Tests
 
             Functions functions = new Functions();
 
-
             request = new APIGatewayProxyRequest();
             context = new TestLambdaContext();
-            response = functions.Get(request, context);
+            response = await functions.Get(request, context);
             Assert.Equal(200, response.StatusCode);
-            Assert.Equal("it.bz.noi.community-api", response.Body);
+            Assert.NotNull(response.Body);
         }
     }
 }
