@@ -67,7 +67,7 @@ namespace it.bz.noi.community_api
         /// <returns>The API Gateway response.</returns>
         public async Task<APIGatewayProxyResponse> Get(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            string queryString = request.QueryStringParameters.Count > 0 ? $"?{string.Join("&", request.QueryStringParameters.Select(x => $"{x.Key}={x.Value}"))}" : "";
+            string queryString = request.QueryStringParameters?.Count > 0 ? $"?{string.Join("&", request.QueryStringParameters.Select(x => $"{x.Key}={x.Value}"))}" : "";
             context.Logger.LogLine($"Get Request: {request.Path}{queryString} ({request.HttpMethod})\n");
 
             var httpRequest = Helpers.TransformFromAPIGatewayProxyRequest(settings.ServiceUri, request);
