@@ -1,24 +1,20 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'infrastructure/docker/dotnet/Dockerfile'
-        }
-    }
+    agent any
 
     stages {
         stage('Restore Dependencies') {
             steps {
-                sh 'dotnet restore'
+                sh 'docker run --rm -v ${PWD}:/code -w /code mcr.microsoft.com/dotnet/sdk:5.0 dotnet restore'
             }
         }
         stage('Build') {
             steps {
-                sh 'dotnet build --no-restore'
+                sh 'docker run --rm -v ${PWD}:/code -w /code mcr.microsoft.com/dotnet/sdk:5.0 dotnet build --no-restore'
             }
         }
         stage('Test') {
             steps {
-                sh 'dotnet test --no-build --verbosity normal'
+                sh 'docker run --rm -v ${PWD}:/code -w /code mcr.microsoft.com/dotnet/sdk:5.0 dotnet test --no-build --verbosity normal'
             }
         }
     }
