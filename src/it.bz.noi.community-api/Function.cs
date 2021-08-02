@@ -70,13 +70,21 @@ namespace it.bz.noi.community_api
             string queryString = request.QueryStringParameters?.Count > 0 ? $"?{string.Join("&", request.QueryStringParameters.Select(x => $"{x.Key}={x.Value}"))}" : "";
             context.Logger.LogLine($"Get Request: {request.Path}{queryString} ({request.HttpMethod})\n");
 
-            var httpRequest = Helpers.TransformFromAPIGatewayProxyRequest(settings.ServiceUri, request);
-            context.Logger.LogLine($"Sending HttpRequestMessage: {httpRequest}");
-            string accessToken = await GetAccessToken();
-            context.Logger.LogLine($"Got Access Token: {accessToken.Substring(0, 20)}...");
-            var httpResponse = await MakeProxyCall(httpRequest, accessToken);
-            context.Logger.LogLine($"Received HttpResponseMessage: {httpResponse}");
-            return await Helpers.TransformToAPIGatewayResponse(httpResponse);
+            try
+            {
+                var httpRequest = Helpers.TransformFromAPIGatewayProxyRequest(settings.ServiceUri, request);
+                context.Logger.LogLine($"Sending HttpRequestMessage: {httpRequest.ToString()}");
+                string accessToken = await GetAccessToken();
+                context.Logger.LogLine($"Got Access Token: {accessToken.Substring(0, 20)}...");
+                var httpResponse = await MakeProxyCall(httpRequest, accessToken);
+                context.Logger.LogLine($"Received HttpResponseMessage: {httpResponse.ToString()}");
+                return await Helpers.TransformToAPIGatewayResponse(httpResponse);
+            }
+            catch (Exception ex)
+            {
+                context.Logger.LogLine(ex.ToString());
+                throw;
+            }
         }
     }
 }
