@@ -11,6 +11,14 @@ namespace it.bz.noi.community_api
 {
     public class Helpers
     {
+        private static readonly Lazy<HashSet<string>> allowedHeaders =
+            new (() =>
+                new () {
+                    "accept",
+                    "accept-encoding",
+                    "content-type"
+                });
+
         public static Uri ConstructRequestUri(Uri serviceUri, APIGatewayProxyRequest request)
         {
             string relativeUri = request.Path == null ? "/" : $"{request.Path}";
@@ -28,7 +36,8 @@ namespace it.bz.noi.community_api
             {
                 foreach (var header in request.Headers)
                 {
-                    httpRequest.Headers.Add(header.Key, header.Value);
+                    if (allowedHeaders.Value.Contains(header.Key.ToLowerInvariant()))
+                        httpRequest.Headers.Add(header.Key, header.Value);
                 }
             }
             return httpRequest;
