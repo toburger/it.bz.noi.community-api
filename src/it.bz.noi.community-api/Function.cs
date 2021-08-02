@@ -50,7 +50,12 @@ namespace it.bz.noi.community_api
         private async Task<HttpResponseMessage> MakeProxyCall(HttpRequestMessage request, string accessToken)
         {
             //var client = clientFactory.CreateClient("dynamics365");
-            using var client = new HttpClient();
+            using var handler = new HttpClientHandler()
+            {
+                ClientCertificateOptions = ClientCertificateOption.Manual,
+                ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+            };
+            using var client = new HttpClient(handler);
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
             return await client.SendAsync(request);
         }
