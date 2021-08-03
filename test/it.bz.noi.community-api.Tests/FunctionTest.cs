@@ -9,6 +9,7 @@ using Amazon.Lambda.TestUtilities;
 using Amazon.Lambda.APIGatewayEvents;
 
 using it.bz.noi.community_api;
+using dotenv.net;
 
 namespace it.bz.noi.community_api.Tests
 {
@@ -16,6 +17,7 @@ namespace it.bz.noi.community_api.Tests
     {
         public FunctionTest()
         {
+            DotEnv.Load();
         }
 
         [Fact]
