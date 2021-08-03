@@ -11,14 +11,6 @@ namespace it.bz.noi.community_api
 {
     public class Helpers
     {
-        private static readonly Lazy<HashSet<string>> allowedHeaders =
-            new (() =>
-                new () {
-                    "accept",
-                    "accept-encoding",
-                    "content-type"
-                });
-
         public static Uri ConstructRequestUri(Uri serviceUri, APIGatewayProxyRequest request)
         {
             string relativeUri = request.Path == null ? "/" : $"{request.Path}";
@@ -36,12 +28,25 @@ namespace it.bz.noi.community_api
             {
                 foreach (var header in request.Headers)
                 {
-                    if (allowedHeaders.Value.Contains(header.Key.ToLowerInvariant()))
-                        httpRequest.Headers.Add(header.Key, header.Value);
+                    httpRequest.Headers.Add(header.Key, header.Value);
                 }
             }
+            CleanupHostHeader(httpRequest, uri.Host);
             return httpRequest;
         }
+
+        /// <summary>
+        /// Fix the host, as the Dynamics 365 service returns a 404 otherwise.
+        /// </summary>
+        private static void CleanupHostHeader(HttpRequestMessage httpRequest, string host)
+        {
+            if (httpRequest.Headers.Contains("Host"))
+            {
+                httpRequest.Headers.Remove("Host");
+            }
+            httpRequest.Headers.Add("Host", host);
+        }
+
         public static async Task<APIGatewayProxyResponse> TransformToAPIGatewayResponse(HttpResponseMessage httpResponse)
         {
             string body = await httpResponse.Content.ReadAsStringAsync();
