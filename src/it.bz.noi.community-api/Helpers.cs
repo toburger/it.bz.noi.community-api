@@ -1,6 +1,7 @@
 ﻿using Amazon.Lambda.APIGatewayEvents;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -47,17 +48,35 @@ namespace it.bz.noi.community_api
             httpRequest.Headers.Add("Host", host);
         }
 
+        private static bool CheckResponseSize(HttpResponseMessage httpResponse, [NotNullWhen(true)] out APIGatewayProxyResponse? response)
+        {
+            if (httpResponse.Content.Headers.ContentLength >= 6291456)
+            {
+                response = new APIGatewayProxyResponse
+                {
+                    StatusCode = 413
+                };
+                return true;
+            }
+            response = null;
+            return false;
+        }
+
         public static async Task<APIGatewayProxyResponse> TransformToAPIGatewayResponse(HttpResponseMessage httpResponse)
         {
+            if (CheckResponseSize(httpResponse, out var response))
+            {
+                return response;
+            }
+                
             string body = await httpResponse.Content.ReadAsStringAsync();
             var headers = httpResponse.Headers.ToDictionary(x => x.Key, x => x.Value.FirstOrDefault());
-            var response = new APIGatewayProxyResponse
+            return new APIGatewayProxyResponse
             {
                 StatusCode = (int)httpResponse.StatusCode,
                 Body = body,
                 Headers = headers
             };
-            return response;
         }
     }
 }
