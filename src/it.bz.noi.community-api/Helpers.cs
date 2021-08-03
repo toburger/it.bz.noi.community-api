@@ -48,6 +48,11 @@ namespace it.bz.noi.community_api
             httpRequest.Headers.Add("Host", host);
         }
 
+        /// <summary>
+        /// Check the response size as AWS Lambda has a limit
+        /// of 6MB and throws an error if the size is bigger
+        /// than the maximum size.
+        /// </summary>
         private static bool CheckResponseSize(HttpResponseMessage httpResponse, [NotNullWhen(true)] out APIGatewayProxyResponse? response)
         {
             if (httpResponse.Content.Headers.ContentLength >= 6291456)
