@@ -1,11 +1,14 @@
 # it.bz.noi.community-api
 
-* [Getting started](#Getting-started)
-    * [Prerequisites](#Prerequisistes)
-    * [Source code](#Source-code)
-* [Development](#Development)
-    * [Local testing](#Local-testing)
-* [Deployment](#Deployment)
+- [Getting started](#Getting-started)
+  - [Prerequisites](#Prerequisistes)
+  - [Source code](#Source-code)
+  - [Environment variables](#Environment-variables)
+- [Development](#Development)
+  - [From the command line](#From-the-command-line)
+  - [With an IDE](#With-an-IDE)
+  - [Local testing](#Local-testing)
+- [Deployment](#Deployment)
 
 ## Getting started
 
@@ -13,13 +16,27 @@
 
 To build the project, the following prerequisites must be met:
 
-* [.NET 5.0](https://get.dot.net)
+- [.NET 5.0](https://get.dot.net)
 
 ### Source code
 
 Get a clone of this repository
 
 `git clone https://github.com/noi-techpark/it.bz.noi.community-api`
+
+### Environment variables
+
+The following environment variables are needed in ordert to get the lambda function to work:
+
+| Key           | Value                                           |
+| ------------- | ----------------------------------------------- |
+| CLIENT_ID     | <CLIENT_ID provided by Würth Phoenix>           |
+| CLIENT_SECRET | <CLIENT_SECRET provided by Würth Phoenix>       |
+| TENANT_ID     | <TENANT_ID provided by Würth Phoenix>           |
+| SERVICE_URL   | https://noitest.crm4.dynamics.com/api/data/v9.2 |
+| SERVICE_SCOPE | https://noitest.crm4.dynamics.com/.default      |
+
+***Question**: The SERVICE_URL and SERVICE_SCOPE (...noitest...) will change in the future?*
 
 ## Development
 
@@ -29,24 +46,24 @@ The project can be developed purely with a basic editor in combination with the 
 
 Notable commands are:
 
-* `dotnet tool restore`:
+- `dotnet tool restore`:
   restores the CLI tools
-* `dotnet restore`:
+- `dotnet restore`:
   restores the project dependencies
-* `dotnet build`:
+- `dotnet build`:
   run a build
-* `dotnet test`:
+- `dotnet test`:
   run the tests
-* `dotnet watch test -p ./test/it.bz.noi.community-api.Tests/`:
+- `dotnet watch test -p ./test/it.bz.noi.community-api.Tests/`:
   watch and run tests after a file gets modified
 
 ### With an IDE
 
 You can develop the app with your coding editor of your choice that supports C#. For example to code with Visual Studio Code:
 
-* Start VS Code, e.g. by launching `code .` from the command line.
-* Install the `ms-dotnettools.csharp` VS Code extension for C# coding support (if not already installed).
-* The editor tooling should now work and you can start to code.
+- Start VS Code, e.g. by launching `code .` from the command line.
+- Install the `ms-dotnettools.csharp` VS Code extension for C# coding support (if not already installed).
+- The editor tooling should now work and you can start to code.
 
 ### Local testing
 
