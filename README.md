@@ -1,6 +1,6 @@
 # it.bz.noi.community-api
 
-This AWS Lambda service acts as a proxy service over the Dynamics 365 API provided to NOI Technology by Würt Phoenix.
+This AWS Lambda service acts as a proxy service over the Dynamics 365 API provided to NOI Technology by Würth Phoenix.
 
 ## Table of contents
 
