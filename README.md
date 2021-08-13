@@ -42,6 +42,15 @@ The following environment variables are needed in ordert to get the lambda funct
 
 ***Question**: The SERVICE_URL and SERVICE_SCOPE (...noitest...) will change in the future?*
 
+-----
+
+The following AWS command [configures the environment variables](https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-api) for an AWS Lambda function:
+
+```sh
+aws lambda update-function-configuration --function-name my-function \
+    --environment "Variables={BUCKET=my-bucket,KEY=file.txt}"
+```
+
 ## Development
 
 The project can be developed purely with a basic editor in combination with the dotnet CLI.
