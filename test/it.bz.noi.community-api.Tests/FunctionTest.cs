@@ -30,7 +30,7 @@ namespace it.bz.noi.community_api.Tests
         }
 
         [Fact(Skip = "Integration Test")]
-        public async Task TetGetMethod()
+        public async Task TestGetMethod()
         {
             TestLambdaContext context;
             APIGatewayProxyRequest request;
