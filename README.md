@@ -86,7 +86,9 @@ I am not convinced that this is a time efficient way to develop and test the fun
 
 ## Deployment
 
-To deploy the image from your own machine make sure to configure an AWS named profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html).
+The following Documentation describes the deployment process of a .NET application to AWS Lambda: https://aws.amazon.com/de/blogs/developer/deploying-net-core-aws-lambda-functions-from-the-command-line/
+
+To deploy the image from your own machine make sure to configure an [AWS named profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html).
 
 Then run the following commands:
 
