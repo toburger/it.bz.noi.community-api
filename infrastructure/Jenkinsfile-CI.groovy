@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Restore Dependencies') {
             steps {
+                sh 'docker run --rm -v ${PWD}:/code -w /code mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet tool restore'
                 sh 'docker run --rm -v ${PWD}:/code -w /code mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet restore'
             }
         }
