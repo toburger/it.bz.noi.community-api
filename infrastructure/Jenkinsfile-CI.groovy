@@ -10,12 +10,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'docker run --rm -v ${PWD}:/code -w /code mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet build --no-restore'
+                sh 'docker run --rm -v ${PWD}:/code -w /code mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet build'
             }
         }
         stage('Test') {
             steps {
-                sh 'docker run --rm -v ${PWD}:/code -w /code mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet test --no-build --verbosity normal'
+                sh 'docker run --rm -v ${PWD}:/code -w /code mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet test'
             }
         }
     }
