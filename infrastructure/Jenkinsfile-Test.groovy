@@ -32,8 +32,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'aws lambda update-function-configuration --function-name it-bz-noi-community-api-test --environment "Variables={CLIENT_ID=${CLIENT_ID},CLIENT_SECRET=${CLIENT_SECRET},TENANT_ID=${TENANT_ID},SERVICE_URL=${SERVICE_URL},SERVICE_SCOPE=${SERVICE_SCOPE}}"'
                 sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet lambda deploy-serverless it-bz-noi-community-api-test -sb it-bz-noi-community-api-test -pl ./src/it.bz.noi.community-api/'
+                sh 'aws lambda update-function-configuration --function-name it-bz-noi-community-api-test --environment "Variables={CLIENT_ID=${CLIENT_ID},CLIENT_SECRET=${CLIENT_SECRET},TENANT_ID=${TENANT_ID},SERVICE_URL=${SERVICE_URL},SERVICE_SCOPE=${SERVICE_SCOPE}}"'
             }
         }
     }
