@@ -16,23 +16,23 @@ pipeline {
     stages {
         stage('Restore Dependencies') {
             steps {
-                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet/tools:/root/.dotnet/tools mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet tool restore'
-                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet/tools:/root/.dotnet/tools mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet restore'
+                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet:/root/.dotnet mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet tool restore'
+                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet:/root/.dotnet mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet restore'
             }
         }
         stage('Build') {
             steps {
-                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet/tools:/root/.dotnet/tools mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet build --no-restore'
+                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet:/root/.dotnet mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet build --no-restore'
             }
         }
         stage('Test') {
             steps {
-                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet/tools:/root/.dotnet/tools mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet test --no-build --verbosity normal'
+                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet:/root/.dotnet mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet test --no-build --verbosity normal'
             }
         }
         stage('Deploy') {
             steps {
-                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet/tools:/root/.dotnet/tools mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet lambda deploy-serverless it-bz-noi-community-api-test -sb it-bz-noi-community-api-test -pl ./src/it.bz.noi.community-api/'
+                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet:/root/.dotnet mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet lambda deploy-serverless it-bz-noi-community-api-test -sb it-bz-noi-community-api-test -pl ./src/it.bz.noi.community-api/'
                 sh 'aws lambda update-function-configuration --function-name it-bz-noi-community-api-test --environment "Variables={CLIENT_ID=${CLIENT_ID},CLIENT_SECRET=${CLIENT_SECRET},TENANT_ID=${TENANT_ID},SERVICE_URL=${SERVICE_URL},SERVICE_SCOPE=${SERVICE_SCOPE}}"'
             }
         }
