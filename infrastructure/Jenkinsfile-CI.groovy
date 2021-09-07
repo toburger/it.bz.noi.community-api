@@ -19,13 +19,13 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh "docker-compose -f docker-compose.yml build"
+                sh "docker compose -f docker-compose.yml build"
             }
         }
     }
     post { 
         always { 
-            sh 'docker-compose -f docker-compose.yml down || true'
+            sh 'docker compose -f docker-compose.yml down || true'
         }
     }
 }
