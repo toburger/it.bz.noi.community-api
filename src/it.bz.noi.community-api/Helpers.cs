@@ -1,4 +1,5 @@
-﻿using Amazon.Lambda.APIGatewayEvents;
+﻿//using Amazon.Lambda.APIGatewayEvents;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -10,78 +11,77 @@ using System.Threading.Tasks;
 
 namespace it.bz.noi.community_api
 {
-    public class Helpers
+    /// <summary>
+    /// Code taken from https://github.com/aspnet/Proxy/blob/master/src/Microsoft.AspNetCore.Proxy/ProxyAdvancedExtensions.cs
+    /// </summary>
+    public static class Helpers
     {
-        public static Uri ConstructRequestUri(Uri serviceUri, APIGatewayProxyRequest request)
-        {
-            string relativeUri = request.Path == null ? "/" : $"{request.Path}";
-            string queryString = request.QueryStringParameters?.Count > 0 ? $"?{string.Join("&", request.QueryStringParameters.Select(x => $"{x.Key}={x.Value}"))}" : "";
-            return new Uri($"{serviceUri}{relativeUri}{queryString}");
-        }
+        private const int StreamCopyBufferSize = 81920;
 
-        public static HttpRequestMessage TransformFromAPIGatewayProxyRequest(Uri serviceUri, APIGatewayProxyRequest request)
+        public static HttpRequestMessage CreateProxyHttpRequest(this HttpContext context, Uri uri)
         {
-            var method = request.HttpMethod == null ? HttpMethod.Get : new HttpMethod(request.HttpMethod);
-            var uri = ConstructRequestUri(serviceUri, request);
-            var content = request.Body != null ? new StringContent(request.Body) : null;
-            var httpRequest = new HttpRequestMessage(method, uri) { Content = content };
-            if (request.Headers != null)
+            var request = context.Request;
+
+            var requestMessage = new HttpRequestMessage();
+            var requestMethod = request.Method;
+            if (!HttpMethods.IsGet(requestMethod) &&
+                !HttpMethods.IsHead(requestMethod) &&
+                !HttpMethods.IsDelete(requestMethod) &&
+                !HttpMethods.IsTrace(requestMethod))
             {
-                foreach (var header in request.Headers)
+                var streamContent = new StreamContent(request.Body);
+                requestMessage.Content = streamContent;
+            }
+
+            // Copy the request headers
+            foreach (var header in request.Headers)
+            {
+                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && requestMessage.Content != null)
                 {
-                    httpRequest.Headers.Add(header.Key, header.Value);
+                    requestMessage.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
                 }
             }
-            CleanupHostHeader(httpRequest, uri.Host);
-            return httpRequest;
+
+            requestMessage.Headers.Host = uri.Authority;
+            requestMessage.RequestUri = CreateRequestUri(context, uri);
+            requestMessage.Method = new HttpMethod(request.Method);
+
+            return requestMessage;
         }
 
-        /// <summary>
-        /// Fix the host, as the Dynamics 365 service returns a 404 otherwise.
-        /// </summary>
-        private static void CleanupHostHeader(HttpRequestMessage httpRequest, string host)
+        private static Uri CreateRequestUri(HttpContext context, Uri uri)
         {
-            if (httpRequest.Headers.Contains("Host"))
-            {
-                httpRequest.Headers.Remove("Host");
-            }
-            httpRequest.Headers.Add("Host", host);
+            string queryString = $"?{string.Join("&", context.Request.Query.Select(x => $"{x.Key}={x.Value}"))}";
+            return new Uri($"{uri}{context.Request.Path}{queryString}");
         }
 
-        /// <summary>
-        /// Check the response size as AWS Lambda has a limit
-        /// of 6MB and throws an error if the size is bigger
-        /// than the maximum size.
-        /// </summary>
-        private static bool CheckResponseSize(HttpResponseMessage httpResponse, [NotNullWhen(true)] out APIGatewayProxyResponse? response)
+        public static async Task CopyProxyHttpResponse(this HttpContext context, HttpResponseMessage responseMessage)
         {
-            if (httpResponse.Content.Headers.ContentLength >= 6291456)
+            if (responseMessage == null)
             {
-                response = new APIGatewayProxyResponse
-                {
-                    StatusCode = 413
-                };
-                return true;
+                throw new ArgumentNullException(nameof(responseMessage));
             }
-            response = null;
-            return false;
-        }
 
-        public static async Task<APIGatewayProxyResponse> TransformToAPIGatewayResponse(HttpResponseMessage httpResponse)
-        {
-            if (CheckResponseSize(httpResponse, out var response))
+            var response = context.Response;
+
+            response.StatusCode = (int)responseMessage.StatusCode;
+            foreach (var header in responseMessage.Headers)
             {
-                return response;
+                response.Headers[header.Key] = header.Value.ToArray();
             }
-                
-            string body = await httpResponse.Content.ReadAsStringAsync();
-            var headers = httpResponse.Headers.ToDictionary(x => x.Key, x => x.Value.FirstOrDefault());
-            return new APIGatewayProxyResponse
+
+            foreach (var header in responseMessage.Content.Headers)
             {
-                StatusCode = (int)httpResponse.StatusCode,
-                Body = body,
-                Headers = headers
-            };
+                response.Headers[header.Key] = header.Value.ToArray();
+            }
+
+            // SendAsync removes chunking from the response. This removes the header so it doesn't expect a chunked response.
+            response.Headers.Remove("transfer-encoding");
+
+            using (var responseStream = await responseMessage.Content.ReadAsStreamAsync())
+            {
+                await responseStream.CopyToAsync(response.Body, StreamCopyBufferSize, context.RequestAborted);
+            }
         }
     }
 }
