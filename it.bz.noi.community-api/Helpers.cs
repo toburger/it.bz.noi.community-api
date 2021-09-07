@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace it.bz.noi.community_api
 {
     /// <summary>
-    /// Code taken from https://github.com/aspnet/Proxy/blob/master/src/Microsoft.AspNetCore.Proxy/ProxyAdvancedExtensions.cs
+    /// Code inspired by https://github.com/aspnet/Proxy/blob/master/src/Microsoft.AspNetCore.Proxy/ProxyAdvancedExtensions.cs
     /// </summary>
     public static class Helpers
     {
