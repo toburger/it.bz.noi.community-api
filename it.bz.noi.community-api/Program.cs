@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace it.bz.noi.community_api
 {
-    class Program
+    public class Program
     {
-        static async Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             DotEnv.Load();
             var host = CreateHostBuilder(args).Build();

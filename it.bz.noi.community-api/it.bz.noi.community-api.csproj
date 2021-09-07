@@ -4,6 +4,7 @@
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <Nullable>enable</Nullable>
     <RootNamespace>it.bz.noi.community_api</RootNamespace>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="dotenv.net" Version="3.1.0" />
