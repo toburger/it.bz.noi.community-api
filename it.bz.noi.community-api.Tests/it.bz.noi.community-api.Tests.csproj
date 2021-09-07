@@ -12,6 +12,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\it.bz.noi.community-api\it.bz.noi.community-api.csproj" />
+    <ProjectReference Include="..\it.bz.noi.community-api\it.bz.noi.community-api.csproj" />
   </ItemGroup>
 </Project>
