@@ -1,22 +1,31 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = "app"
+        DOCKER_TAG = "latest"
+        SERVER_PORT = "1234" 
+    }
+
     stages {
-        stage('Restore Dependencies') {
+        stage('Configure') {
             steps {
-                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet:/root/.dotnet mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet tool restore'
-                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet:/root/.dotnet mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet restore'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet:/root/.dotnet mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet build --no-restore'
+                sh "rm -f .env"
+                sh "cp .env.example .env"
+                sh "echo 'DOCKER_IMAGE=${DOCKER_IMAGE}' >> .env"
+                sh "echo 'DOCKER_TAG=${DOCKER_TAG}' >> .env"
+                sh "echo 'SERVER_PORT=${SERVER_PORT}' >> .env"
             }
         }
         stage('Test') {
             steps {
-                sh 'docker run --rm -v ${PWD}:/code -w /code -v ${PWD}/infrastructure/docker/dotnet/.nuget:/root/.nuget -v ${PWD}/infrastructure/docker/dotnet:/root/.dotnet mcr.microsoft.com/dotnet/sdk:5.0-alpine dotnet test --no-build --verbosity normal'
+                sh "docker compose -f docker-compose.yml build"
             }
+        }
+    }
+    post { 
+        always { 
+            sh 'docker compose -f docker-compose.yml down || true'
         }
     }
 }
