@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "app"
+        DOCKER_IMAGE = "noiapp"
         DOCKER_TAG = "latest"
-        SERVER_PORT = "1234" 
+        SERVER_PORT = "1244" 
     }
 
     stages {
