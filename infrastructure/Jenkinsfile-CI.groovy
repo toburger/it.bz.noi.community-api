@@ -11,7 +11,7 @@ pipeline {
         stage('Configure') {
             steps {
                 sh "rm -f .env"
-                sh "cp .env.example .env"
+                sh "cp it.bz.noi.community-api/.env.example .env"
                 sh "echo 'DOCKER_IMAGE=${DOCKER_IMAGE}' >> .env"
                 sh "echo 'DOCKER_TAG=${DOCKER_TAG}' >> .env"
                 sh "echo 'SERVER_PORT=${SERVER_PORT}' >> .env"
