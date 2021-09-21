@@ -5,7 +5,7 @@
   roles:
     - role: ansible-docker-deployment
       vars:
-        docker_deployment_project_name: odh-tourism-api
+        docker_deployment_project_name: noi-community-api
         docker_deployment_release_name: '{{ release_name }}'
         docker_deployment_release_files:
           - local: ../docker-compose.run.yml
