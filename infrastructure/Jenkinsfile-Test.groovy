@@ -6,7 +6,12 @@ pipeline {
         DOCKER_PROJECT_NAME = "noi-community-api"
         DOCKER_IMAGE = '755952719952.dkr.ecr.eu-west-1.amazonaws.com/noi-community-api'
         DOCKER_TAG = "test-$BUILD_NUMBER"
-	SERVER_PORT = "1044"                
+	SERVER_PORT = "1044"
+	CLIENT_ID = credentials('noi-community-api-test-client-id')
+	CLIENT_SECRET = credentials('noi-community-api-test-client-secret')
+	SERVICE_SCOPE = credentials('noi-community-api-test-scope')
+	SERVICE_URL = credentials('noi-community-api-test-service-url')
+	TENANT_ID = credentials('noi-community-api-test-tenant-id')
     }
 
     stages {
@@ -19,7 +24,12 @@ pipeline {
                     echo 'DOCKER_IMAGE=${DOCKER_IMAGE}' >> .env
                     echo 'DOCKER_TAG=${DOCKER_TAG}' >> .env
                     echo 'SERVER_PORT=${SERVER_PORT}' >> .env         
-		    echo 'ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}' >> .env                             
+		    echo 'ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}' >> .env         
+		    echo 'CLIENT_ID=${CLIENT_ID}' >> .env   
+		    echo 'CLIENT_SECRET=${CLIENT_SECRET}' >> .env   
+		    echo 'SERVICE_SCOPE=${SERVICE_SCOPE}' >> .env   
+		    echo 'SERVICE_URL=${SERVICE_URL}' >> .env   
+		    echo 'TENANT_ID=${TENANT_ID}' >> .env   
                 """
             }
         }
