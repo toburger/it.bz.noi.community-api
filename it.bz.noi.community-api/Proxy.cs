@@ -27,7 +27,7 @@ namespace it.bz.noi.community_api
 
         private static async Task<string> GetAccessToken()
         {
-            if (authenticationResult == null || authenticationResult.ExpiresOn >= DateTimeOffset.Now)
+            if (authenticationResult == null || authenticationResult.ExpiresOn >= DateTimeOffset.UtcNow)
             {
                 authenticationResult = await identityClientApp.AcquireTokenForClient(settings.Scopes).ExecuteAsync();
             }
