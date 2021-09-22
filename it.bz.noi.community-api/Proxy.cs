@@ -12,7 +12,6 @@ namespace it.bz.noi.community_api
     {
         private static readonly Settings settings;
         private static readonly IConfidentialClientApplication identityClientApp;
-        private static AuthenticationResult? authenticationResult;
 
         static Proxy()
         {
@@ -27,10 +26,8 @@ namespace it.bz.noi.community_api
 
         private static async Task<string> GetAccessToken()
         {
-            if (authenticationResult == null || authenticationResult.ExpiresOn >= DateTimeOffset.UtcNow)
-            {
-                authenticationResult = await identityClientApp.AcquireTokenForClient(settings.Scopes).ExecuteAsync();
-            }
+            var tokenClient = identityClientApp.AcquireTokenForClient(settings.Scopes);
+            var authenticationResult = await tokenClient.ExecuteAsync();
             return authenticationResult.AccessToken;
         }
 
