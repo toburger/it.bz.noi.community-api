@@ -4,7 +4,7 @@ This microservice acts as a proxy service over the Dynamics 365 API provided to 
 
 This API uses the OData standard: https://docs.microsoft.com/en-us/odata/
 
-A temporary test installation can be found here --> https://dwk7r85c2k.execute-api.eu-central-1.amazonaws.com/Prod/
+A test installation can be found here --> https://api.community.noi.testingmachine.eu/
 
 ## Table of contents
 
