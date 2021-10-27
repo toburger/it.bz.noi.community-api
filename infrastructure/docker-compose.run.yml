@@ -11,6 +11,7 @@ services:
       SERVICE_SCOPE: ${SERVICE_SCOPE}
       SERVICE_URL: ${SERVICE_URL}
       TENANT_ID: ${TENANT_ID}
+      OPENID_AUTHORITY: ${OPENID_AUTHORITY}
     restart: unless-stopped
     ports:
       - "${SERVER_PORT}:80"
