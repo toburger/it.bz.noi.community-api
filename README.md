@@ -36,13 +36,14 @@ Get a clone of this repository
 
 The following environment variables are needed in ordert to get the lambda function to work:
 
-| Key           | Value                                           |
-| ------------- | ----------------------------------------------- |
-| CLIENT_ID     | <CLIENT_ID provided by Würth Phoenix>           |
-| CLIENT_SECRET | <CLIENT_SECRET provided by Würth Phoenix>       |
-| TENANT_ID     | <TENANT_ID provided by Würth Phoenix>           |
-| SERVICE_URL   | https://noitest.crm4.dynamics.com/api/data/v9.2 |
-| SERVICE_SCOPE | https://noitest.crm4.dynamics.com/.default      |
+| Key              | Value                                           |
+| -------------    | ----------------------------------------------- |
+| CLIENT_ID        | <CLIENT_ID provided by Würth Phoenix>           |
+| CLIENT_SECRET    | <CLIENT_SECRET provided by Würth Phoenix>       |
+| TENANT_ID        | <TENANT_ID provided by Würth Phoenix>           |
+| SERVICE_URL      | https://noitest.crm4.dynamics.com/api/data/v9.2 |
+| SERVICE_SCOPE    | https://noitest.crm4.dynamics.com/.default      |
+| OPENID_AUTHORITY | <Authentication Server Realm URL>               |
 
 ***Question**: The SERVICE_URL and SERVICE_SCOPE (...noitest...) will change in the future?*
 
