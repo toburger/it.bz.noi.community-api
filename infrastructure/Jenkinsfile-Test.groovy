@@ -12,6 +12,7 @@ pipeline {
 	SERVICE_SCOPE = credentials('noi-community-api-test-scope')
 	SERVICE_URL = credentials('noi-community-api-test-service-url')
 	TENANT_ID = credentials('noi-community-api-test-tenant-id')
+	OPENID_AUTHORITY = "https://auth.opendatahub.testingmachine.eu/auth/realms/noi/"
     }
 
     stages {
@@ -30,6 +31,7 @@ pipeline {
 		    echo 'SERVICE_SCOPE=${SERVICE_SCOPE}' >> .env   
 		    echo 'SERVICE_URL=${SERVICE_URL}' >> .env   
 		    echo 'TENANT_ID=${TENANT_ID}' >> .env   
+		    echo 'OPENID_AUTHORITY=${OPENID_AUTHORITY}' >> .env   		    
                 """
             }
         }
