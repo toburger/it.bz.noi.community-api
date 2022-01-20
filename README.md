@@ -1,5 +1,7 @@
 # it.bz.noi.community-api
 
+[![CI](https://github.com/noi-techpark/it.bz.noi.community-api/actions/workflows/ci.yml/badge.svg)](https://github.com/noi-techpark/it.bz.noi.community-api/actions/workflows/ci.yml)
+
 This microservice acts as a proxy service over the Dynamics 365 API provided to NOI Technology by Würth Phoenix.
 
 This API uses the OData standard: https://docs.microsoft.com/en-us/odata/
