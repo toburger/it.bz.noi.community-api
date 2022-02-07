@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace it.bz.noi.community_api
 {
     [ApiController]
-    [Route("")]
+    [Route("{*url}")]
     public class ProxyController : Controller
     {
         private static readonly Settings settings;
