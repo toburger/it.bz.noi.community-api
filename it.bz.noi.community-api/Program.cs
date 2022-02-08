@@ -1,6 +1,5 @@
 using it.bz.noi.community_api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using Yarp.ReverseProxy.Transforms;
 
@@ -8,20 +7,11 @@ dotenv.net.DotEnv.Load();
 
 var settings = Settings.Initialize();
 
-var identityClientApp =
-    ConfidentialClientApplicationBuilder.Create(settings.ClientId)
-        .WithClientSecret(settings.ClientSecret)
-        .WithAuthority(AzureCloudInstance.AzurePublic, settings.TenantId)
-        .Build();
-
-async Task<string> GetAccessToken()
-{
-    var tokenClient = identityClientApp.AcquireTokenForClient(settings.Scopes);
-    var authenticationResult = await tokenClient.ExecuteAsync();
-    return authenticationResult.AccessToken;
-}
-
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<Settings>(settings);
+builder.Services.AddSingleton<TokenService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -48,7 +38,8 @@ builder.Services.AddReverseProxy()
     .AddTransforms(builderContext =>
     {
         builderContext.AddRequestTransform(async transformContext => {
-            var accessToken = await GetAccessToken();
+            var tokenService = builderContext.Services.GetService<TokenService>()!;
+            var accessToken = await tokenService.FetchToken();
             transformContext.ProxyRequest.Headers.Remove("Authorization");
             transformContext.ProxyRequest.Headers.Add("Authorization", $"Bearer {accessToken}");
         });
