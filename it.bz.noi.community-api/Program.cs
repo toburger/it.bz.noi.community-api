@@ -1,6 +1,7 @@
 using it.bz.noi.community_api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Yarp.ReverseProxy.Configuration;
 using Yarp.ReverseProxy.Transforms;
 
 dotenv.net.DotEnv.Load();
@@ -33,8 +34,33 @@ builder.Services.AddAuthorization(options =>
         policy.RequireAuthenticatedUser());
 });
 
+var routes = new[]
+{
+    new RouteConfig()
+    {
+        RouteId = "route1",
+        ClusterId = "cluster1",
+        AuthorizationPolicy = "noi-auth",
+        Match = new RouteMatch()
+        {
+            Path = "{**catch-all}"
+        }
+    }
+};
+var clusters = new[]
+{
+    new ClusterConfig()
+    {
+        ClusterId = "cluster1",
+        Destinations = new Dictionary<string, DestinationConfig>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "destination1", new DestinationConfig() { Address = settings.ServiceUri } }
+        }
+    }
+};
+
 builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    .LoadFromMemory(routes, clusters)
     .AddTransforms(builderContext =>
     {
         builderContext.AddRequestTransform(async transformContext => {
