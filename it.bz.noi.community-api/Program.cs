@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using it.bz.noi.community_api;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -59,15 +60,17 @@ var clusters = new[]
     }
 };
 
-builder.Services.AddReverseProxy()
+builder.Services
+    .AddReverseProxy()
     .LoadFromMemory(routes, clusters)
     .AddTransforms(builderContext =>
     {
-        builderContext.AddRequestTransform(async transformContext => {
+        builderContext.AddRequestTransform(async transformContext =>
+        {
             var tokenService = builderContext.Services.GetService<TokenService>()!;
             var accessToken = await tokenService.FetchToken();
-            transformContext.ProxyRequest.Headers.Remove("Authorization");
-            transformContext.ProxyRequest.Headers.Add("Authorization", $"Bearer {accessToken}");
+            var authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            transformContext.ProxyRequest.Headers.Authorization = authorization; 
         });
     });
 
