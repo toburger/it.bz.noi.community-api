@@ -10,7 +10,7 @@ The following API endpoints are of interest for the NOI App:
   Lists all the contacts that are member of the NOI community.
   ![](https://user-images.githubusercontent.com/7909989/158358399-fcdf74f8-991d-4894-a856-faecd6f7f5ff.png)
 
-## Gettings started
+## Getting started
 
 In order to consume data from the community API a **valid authentification token** has to be provided as bearer token.
 For documentation on how to authenticate againts the [NOI authentication server](https://github.com/noi-techpark/authentication-server) and produce a valid bearer please consult the documentation of the NOI authentication server.
