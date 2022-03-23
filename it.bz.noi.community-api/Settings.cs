@@ -8,7 +8,7 @@ namespace it.bz.noi.community_api
 {
     public class Settings
     {
-        private readonly Uri serviceUri;
+        private readonly string serviceUri;
         private readonly string clientId;
         private readonly string tenantId;
         private readonly string clientSecret;
@@ -19,7 +19,7 @@ namespace it.bz.noi.community_api
 
         private Settings()
         {
-            serviceUri = new Uri(GetEnv("SERVICE_URL"));
+            serviceUri = GetEnv("SERVICE_URL");
             clientId = GetEnv("CLIENT_ID")!;
             tenantId = GetEnv("TENANT_ID")!;
             clientSecret = GetEnv("CLIENT_SECRET")!;
@@ -32,7 +32,7 @@ namespace it.bz.noi.community_api
             return Environment.GetEnvironmentVariable(key) ?? throw new Exception($"Environment variable {key} not set.");
         }
 
-        public Uri ServiceUri => serviceUri;
+        public string ServiceUri => serviceUri;
 
         public string ClientId => clientId;
 
