@@ -92,3 +92,6 @@ You can develop the app with your coding editor of your choice that supports C#.
 
 See how the [`odh-api-core` project ](https://github.com/noi-techpark/odh-api-core/) gets deployed. The only notable difference is that the `Dockerfile` and `docker compose.yml` files are located at the root of the directory.
 
+## API consumer documentation
+
+See [here](docs/consumer.md)
