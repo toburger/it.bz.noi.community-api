@@ -3,7 +3,7 @@
 The following API endpoints are of interest for the NOI App:
 
 - **[Accounts](#accounts)**
-  Lists all accounts/organisations that are member of the NOI community.
+  Lists all accounts/organizations that are member of the NOI community.
   ![](https://user-images.githubusercontent.com/7909989/158361210-dfcf557c-5ede-49ef-8807-f9bee3de43c5.png)
 
 - **[Contacts](#contacts)**
@@ -12,8 +12,8 @@ The following API endpoints are of interest for the NOI App:
 
 ## Getting started
 
-In order to consume data from the community API a **valid authentification token** has to be provided as bearer token.
-For documentation on how to authenticate againts the [NOI authentication server](https://github.com/noi-techpark/authentication-server) and produce a valid bearer please consult the documentation of the NOI authentication server.
+In order to consume data from the community API a **valid authentication token** has to be provided as bearer token.
+For documentation on how to authenticate against the [NOI authentication server](https://github.com/noi-techpark/authentication-server) and produce a valid bearer please consult the documentation of the NOI authentication server.
 
 The NOI community API uses the OData protocol in order to filter and select certain parts of the data.
 Please refer to the official OData documentation which can be found [here](https://www.odata.org/documentation/).
@@ -59,7 +59,7 @@ This are the parts of the URL which form the query:
    This is the endpoint which returns all contacts.
 1. Query arguments:
     1. `$top=100`
-    Returns the $top 100 accounts.
+    Returns the $top 100 contacts.
     1. `$filter=Microsoft.Dynamics.CRM.ContainValues(PropertyName=@p1,PropertyValues=@p2) and statuscode eq 1`
     This is the $filter argument, which returns only the active members of the NOI community.
     This part isn't complete, because it refers to the two parameters `@p1` and `@p2`.
